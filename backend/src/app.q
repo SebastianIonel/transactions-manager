@@ -3,7 +3,7 @@ gbpToEur: 1.15
 usdToEur: 0.88
 
 / open port 
-system "p 5000"
+/ system "p 5000"
 
 / load data
 transactions: get `:../data/mock_data
@@ -31,7 +31,7 @@ count_transactions_per_city:{[]
     csv 0: result}
 / count_transactions_per_city[]
 
-/ get total amount in one location TODO: need conversion in one currency
+/ get total amount in one location
 get_amount:{[city]
 	result:select sum amount from eurTransactions where location=city;
     result[0][`amount]}
@@ -42,7 +42,25 @@ get_trend:{[]
 	result:select sum amount by `month$date from eurTransactions;
     result:select amount from result;
     result[`amount]}
+/ get_trend[]
 
+/ get trend for a specified city
+/ TODO
 
+/ best merchant in every city
+/ TODO
+
+/ tracking user 
+/ TODO
+
+/ same time, same user diffrent city ALERT!
+get_alert:{[user]
+    aux: select numberOfLocations:count distinct location, locations:location by date from transactions where user_id=user;
+    r: select locations, date from aux where numberOfLocations>1;
+    row: r 0;
+    "$(row`locations), $(row`date)"} / TODO: fix it
+
+/ favorite currency for every city
+/ TODO
 
 / exit 0
