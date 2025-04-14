@@ -1,7 +1,7 @@
 / money exchange
 gbpToEur: 1.15
 usdToEur: 0.88
-
+/ currencies: `eur `gbp `usd
 / open port 
 / system "p 5000"
 
@@ -12,7 +12,7 @@ transactions: get `:../data/mock_data
 eurTransactions: update amount:gbpToEur*amount from transactions where currency=`gbp
 eurTransactions: update amount:usdToEur*amount from eurTransactions where currency=`usd
 eurTransactions: update currency:`eur from eurTransactions
-show eurTransactions
+/ show eurTransactions
 
 / get total number of trasactions
 count_transactions:{[] count transactions[`id]}
@@ -53,14 +53,22 @@ get_trend:{[]
 / tracking user 
 / TODO
 
-/ same time, same user diffrent city ALERT!
+/ same time, diffrent city for a user ALERT!
 get_alert:{[user]
     aux: select numberOfLocations:count distinct location, locations:location by date from transactions where user_id=user;
     r: select locations, date from aux where numberOfLocations>1;
-    row: r 0;
-    "$(row`locations), $(row`date)"} / TODO: fix it
+    r}
+
+/ get_alert[0]
 
 / favorite currency for every city
 / TODO
 
-/ exit 0
+/ currency usage overall
+get_currency_usage:{[curr]
+    result: select count id by date from transactions where currency=curr;
+    result: select id from result;
+    result[`id]}
+show get_currency_usage[`eur]
+
+exit 0
